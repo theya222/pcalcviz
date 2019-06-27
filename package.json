@@ -2,14 +2,19 @@
   "name": "pcalcviz",
   "version": "0.1.0",
   "private": true,
+  "author": "yades <yade2@student.monash.edu>",
   "scripts": {
-    "serve": "vue-cli-service dev",
+    "dev": "vue-cli-service serve --open --modern",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^12.2.0",
+    "@ckeditor/ckeditor5-vue": "^1.0.0-beta.2",
     "core-js": "^2.6.5",
-    "vue": "^2.6.10"
+    "pcalc": "^0.1.0",
+    "vue": "^2.6.10",
+    "vue-graphviz": "git+https://github.com/AndrewJakubowicz/vue-graphViz.git#a656ab282ba52227933c0414bd2690e3a109e6e1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.8.0",
