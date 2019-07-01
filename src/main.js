@@ -1,9 +1,5 @@
-import CKEditor from '@ckeditor/ckeditor5-vue';
 import Vue from 'vue';
-import App from './App.vue';
-
-
-Vue.use(CKEditor);
+import App from './App';
 
 Vue.config.productionTip = false;
 

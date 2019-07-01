@@ -12,11 +12,11 @@
     "@ckeditor/ckeditor5-build-classic": "^12.2.0",
     "@ckeditor/ckeditor5-vue": "^1.0.0-beta.2",
     "core-js": "^2.6.5",
-    "pcalc": "^0.1.0",
     "vue": "^2.6.10",
-    "vue-graphviz": "git+https://github.com/AndrewJakubowicz/vue-graphViz.git#a656ab282ba52227933c0414bd2690e3a109e6e1"
+    "vue-graphviz": "git+https://github.com/AndrewJakubowicz/vue-graphViz.git#dcbec986de001c29aeb89543ab541e2c1c34731f"
   },
   "devDependencies": {
+    "@ckeditor/ckeditor5-inspector": "^1.3.0",
     "@vue/cli-plugin-babel": "^3.8.0",
     "@vue/cli-plugin-eslint": "^3.8.0",
     "@vue/cli-service": "^3.8.0",
