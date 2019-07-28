@@ -91,6 +91,7 @@ export default {
       )
       .subscribe(({ id, eventInfo }) => {
         const newText = this.getMarkerText(eventInfo.path[1]);
+        console.log("marker Update ", newText, eventInfo)
         this.store.update({
           newText,
           markerId: id,
@@ -166,7 +167,11 @@ export default {
       const createMarkerHelper = (startP, endP) => {
         const id = uuid();
         model.change((writer) => {
-          writer.addMarker(`note:${id}`, { range: model.createRange(startP, endP), usingOperation: false });
+          writer.addMarker(`note:${id}`, {
+            range: model.createRange(startP, endP),
+            usingOperation: false,
+            affectsData: true,
+          });
         });
       };
       // eslint-disable-next-line no-restricted-syntax

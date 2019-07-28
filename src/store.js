@@ -1,7 +1,6 @@
 import uuid from 'uuid/v4';
 import { filter } from 'rxjs/operators';
 
-
 export default class Store {
   constructor(editor, graph) {
     this.graph = graph;
@@ -16,8 +15,36 @@ export default class Store {
         && this.nodes.has(action.id.substring(5))
         && this.nodes.get(action.id.substring(5)).text !== action.value))
       .subscribe((action) => {
-        this.nodes.get(action.id.substring(5)).text = action.value;
-        console.log(action.value);
+        const text = action.value;
+        const nodeId = action.id.substring(5);
+        const node = this.nodes.get(nodeId);
+        node.text = text;
+        // edit ckeditor text
+        const { model } = editor;
+        const markerIdArr = node.markers;
+        const markers = markerIdArr.map(markerId => model.markers.get(markerId));
+        model.change((writer) => {
+          markers.forEach((marker) => {
+            const viewFragment = editor.data.processor.toView(text);
+            const modelFragment = editor.data.toModel(viewFragment);
+            const range = marker.getRange();
+            const lastChar = range.end.clone();
+            lastChar.path[lastChar.path.length - 1] = lastChar.path[lastChar.path.length - 1] - 1;
+            const firstRange = range.clone();
+            firstRange.end.path[firstRange.end.path.length - 1] = firstRange.end.path[firstRange.end.path.length - 1] - 1;
+            const firstSelection = writer.createSelection(firstRange);
+            model.insertContent(modelFragment, lastChar);
+            model.deleteContent(firstSelection, { doNotResetEntireContent: true });
+            const endPos = marker.getRange()
+              .end
+              .clone();
+            const postEndPos = endPos.clone();
+            endPos.path[endPos.path.length - 1] = endPos.path[endPos.path.length - 1] - 1;
+            const endRange = writer.createRange(endPos, postEndPos);
+            const lastCharSelection = writer.createSelection(endRange);
+            model.deleteContent(lastCharSelection, { doNotResetEntireContent: true });
+          });
+        });
       });
   }
 
@@ -55,13 +82,57 @@ export default class Store {
     const nodeId = this.markerMap.get(markerId);
     const node = this.nodes.get(nodeId);
     if (node.text !== newText) {
+      console.log('UPDATE', node.text, newText);
       node.text = newText;
+      // edit graphviz Node
       this.graph.rootObservable.next({
         type: 'NODEEDIT',
         prop: 'TEXT',
         id: node.graphNodeId,
         value: newText,
       });
+      // update all CKEditor text
+      const { model } = this.editor;
+      const { editor } = this;
+      const markerIdArr = node.markers;
+      const markers = markerIdArr.map(id => model.markers.get(id));
+      model.change((writer) => {
+        markers.forEach((marker) => {
+          const viewFragment = editor.data.processor.toView(newText);
+          const modelFragment = editor.data.toModel(viewFragment);
+          const range = marker.getRange();
+          const lastChar = range.end.clone();
+          lastChar.path[lastChar.path.length - 1] = lastChar.path[lastChar.path.length - 1] - 1;
+          const firstRange = range.clone();
+          firstRange.end.path[firstRange.end.path.length - 1] = firstRange.end.path[firstRange.end.path.length - 1] - 1;
+          const firstSelection = writer.createSelection(firstRange);
+          model.insertContent(modelFragment, lastChar);
+          model.deleteContent(firstSelection, { doNotResetEntireContent: true });
+          const endPos = marker.getRange()
+            .end
+            .clone();
+          const postEndPos = endPos.clone();
+          endPos.path[endPos.path.length - 1] = endPos.path[endPos.path.length - 1] - 1;
+          const endRange = writer.createRange(endPos, postEndPos);
+          const lastCharSelection = writer.createSelection(endRange);
+          model.deleteContent(lastCharSelection, { doNotResetEntireContent: true });
+        });
+      });
+
+      // model.change((writer) => {
+      //   const insertOptions = {
+      //     leaveUnmerged: true,
+      //     doNotResetEntireContent: true,
+      //   };
+      //   markers.forEach((marker) => {
+      //     const range = marker.getRange();
+      //     // range.end.path[range.end.path.length - 1] = range.end.path[range.end.path.length - 1] - 1;
+      //     // range.start.path[range.start.path.length - 1] = range.start.path[range.start.path.length - 1] + 1;
+      //     const selection = writer.createSelection(range);
+      //     // model.deleteContent(selection, { doNotResetEntireContent: true });
+      //     model.insertContent(writer.createText(newText), selection);
+      //   });
+      // });
     }
   }
 
