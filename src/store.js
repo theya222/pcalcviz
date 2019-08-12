@@ -82,7 +82,7 @@ export default class Store {
     const nodeId = this.markerMap.get(markerId);
     const node = this.nodes.get(nodeId);
     if (node.text !== newText) {
-      console.log('UPDATE', node.text, newText);
+      // console.log('UPDATE', node.text, newText);
       node.text = newText;
       // edit graphviz Node
       this.graph.rootObservable.next({

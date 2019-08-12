@@ -91,7 +91,6 @@ export default {
       )
       .subscribe(({ id, eventInfo }) => {
         const newText = this.getMarkerText(eventInfo.path[1]);
-        console.log("marker Update ", newText, eventInfo)
         this.store.update({
           newText,
           markerId: id,
@@ -113,12 +112,17 @@ export default {
             // if node marker created
             if (oldRange == null) {
               marker.on('change', (e, r, d) => {
-                this.markerChange$.next({
-                  id: marker.name,
-                  eventInfo: e,
-                  oldRange: r,
-                  data: d,
-                });
+                if (r.end.root.rootName === '$graveyard') {
+                  marker.off();
+                  this.store.remove(marker.name);
+                } else {
+                  this.markerChange$.next({
+                    id: marker.name,
+                    eventInfo: e,
+                    oldRange: r,
+                    data: d,
+                  });
+                }
               });
               this.store.add({
                 markerId: marker.name,
