@@ -112,7 +112,7 @@ export default {
             // if node marker created
             if (oldRange == null) {
               marker.on('change', (e, r, d) => {
-                if (r.end.root.rootName === '$graveyard') {
+                if (d || r.end.root.rootName === '$graveyard') {
                   marker.off();
                   this.store.remove(marker.name);
                 } else {
