@@ -18,7 +18,7 @@
     "vue-graphviz": "git+https://github.com/AndrewJakubowicz/vue-graphViz.git#dcbec986de001c29aeb89543ab541e2c1c34731f"
   },
   "devDependencies": {
-    "@ckeditor/ckeditor5-engine": "^13.2.1",
+    "@ckeditor/ckeditor5-engine": "^27.0.0",
     "@vue/cli-plugin-babel": "^3.9.2",
     "@vue/cli-plugin-eslint": "^3.9.2",
     "@vue/cli-service": "^3.9.2",
